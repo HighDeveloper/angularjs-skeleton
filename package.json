@@ -1,0 +1,15 @@
+{
+  "name": "angularjs-skeleton",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "license": "MIT",
+  "devDependencies": {
+    "connect-history-api-fallback": "^1.2.0",
+    "gulp": "^3.9.1",
+    "gulp-angular-templatecache": "^2.0.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^4.1.0",
+    "gulp-inject": "^4.1.0"
+  }
+}
