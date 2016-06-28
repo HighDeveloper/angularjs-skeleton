@@ -1,6 +1,6 @@
 # AngularJS Skeleton
 
-This README outlines the details of collaborating on this AngularJS 1.x application.
+This README outlines the details of collaborating on this AngularJS 1.x application (like an Ember).
 A short introduction of this app could easily go here.
 
 ## Default AngularJS modules

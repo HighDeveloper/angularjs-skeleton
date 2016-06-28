@@ -1,5 +1,7 @@
 (function () {
 
+  'use strict';
+
   //Adding router configuration to main app module to may define all routes
   angular.module('app').config(routeMapper);
 

@@ -1,5 +1,7 @@
 (function () {
 
+  'use strict';
+
   //Main module named 'app' with its module dependencies
   angular.module('app', ['ui.router', 'restmod', 'satellizer']).config(restmodAdapter).config(satellizerAdapter);
 

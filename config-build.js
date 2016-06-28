@@ -18,7 +18,7 @@ module.exports = function () {
     var directFiles = ['public/**/*', 'app/index.html'];
 
     var appAssets = {
-      scripts: 'app/**/*.js',
+      scripts: ['app/app.js', 'app/modules/**/*.js', 'app/**/*.js'],
       styles: 'app/styles/**/*.css',
       templates: 'app/templates/**/*.html'
     };
