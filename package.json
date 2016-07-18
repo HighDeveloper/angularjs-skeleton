@@ -5,11 +5,20 @@
   "description": "",
   "license": "MIT",
   "devDependencies": {
+    "browser-sync": "^2.13.0",
     "connect-history-api-fallback": "^1.2.0",
     "gulp": "^3.9.1",
     "gulp-angular-templatecache": "^2.0.0",
     "gulp-concat": "^2.6.0",
-    "gulp-connect": "^4.1.0",
-    "gulp-inject": "^4.1.0"
+    "gulp-inject": "^4.1.0",
+    "gulp-less": "^3.1.0",
+    "gulp-protractor": "^2.4.0",
+    "gulp-sass": "^2.3.2",
+    "jasmine-core": "^2.4.1",
+    "karma": "^1.1.1",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-jasmine": "^1.0.2",
+    "merge-stream": "^1.0.0",
+    "protractor": "^4.0.0"
   }
 }

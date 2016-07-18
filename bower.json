@@ -8,6 +8,9 @@
     "angular": "^1.5.7",
     "angular-ui-router": "^0.3.1",
     "angular-restmod": "^1.1.11",
-    "satellizer": "^0.14.1"
+    "satellizer": "^0.14.1",
+    "angular-translate": "^2.11.0",
+    "angular-translate-storage-local": "^2.11.0",
+    "angular-cookies": "^1.5.7"
   }
 }
