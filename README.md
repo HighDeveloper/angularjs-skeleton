@@ -21,6 +21,7 @@ A short introduction of this app could easily go here.
 * Added example of model using angular-restmod, named `app.user`. The model is user but this is added to global and main module called `app`
 * When you add new dependency manually (downloading file) or using bower, put them into `vendor` directory and then add import style / script inside config-build.js (remember execute `gulp build`)
 * When you add favicon, images and fonts, put them into `public` folder and then reference them inside `index.html` of `app` directory
+* All test cases using karma for unit testing, and e2e testing using protractor need to be added inside `tests/unit` and `tests/e2e` directories respectively (remember framework used is jasmine)
 * You can re-define the name of main module inside `app.js` and also the naming conventions, project structure, dependencies and more. However we recommend these rules for better approach
 
 ## Prerequisites
@@ -54,3 +55,7 @@ You will need the following things properly installed on your computer.
 * Check-out the dist folder with the last files and changes. This execute full-build with styles, scripts, templates and more.
 * Always use this command when you add new script / style into config-build.js.
 
+## Testing
+
+* `gulp unit-tests` execute all unit testing files inside `tests/unit` directory
+* `gulp e2e-tests` execute all e2e testing files inside `tests/e2e` directory
