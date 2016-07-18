@@ -3,14 +3,14 @@
   'use strict';
 
   //Main module named 'app' with its module dependencies
-  angular.module('app', ['ui.router', 'restmod', 'satellizer']).config(restmodAdapter).config(satellizerAdapter);
+  angular.module('app', ['ui.router', 'restmod', 'satellizer', 'pascalprecht.translate', 'ngCookies', 'app.authentication']).config(restmodConfig).config(satellizerConfig);
 
   //Injecting service dependencies
-  restmodAdapter.$inject = ['restmodProvider'];
-  satellizerAdapter.$inject = ['$authProvider'];
+  restmodConfig.$inject = ['restmodProvider'];
+  satellizerConfig.$inject = ['$authProvider'];
 
   //Restmod configuration for models representation like ORM
-  function restmodAdapter (restmodProvider) {
+  function restmodConfig(restmodProvider) {
 
     restmodProvider.rebase({
       $config: {
@@ -28,7 +28,7 @@
   }
 
   //Satellizer configuration for user authentication using JWT
-  function satellizerAdapter ($authProvider) {
+  function satellizerConfig($authProvider) {
 
     $authProvider.loginUrl = 'http://localhost/api/v1/signin';
     $authProvider.signupUrl = 'http://localhost/api/v1/signup';

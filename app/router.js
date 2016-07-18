@@ -11,17 +11,23 @@
   //Here define all app routes
   function routeMapper($urlRouterProvider, $stateProvider, $locationProvider) {
 
-    $locationProvider.html5Mode({
-      enabled: true,
-      requireBase: false
-    });
+    $locationProvider.html5Mode(true);
 
     $urlRouterProvider.otherwise('/');
 
-    $stateProvider.state('index', {
-      url: '/',
-      templateUrl: 'templates/index.html'
-    });
+    $stateProvider
+      .state({
+        name: 'index',
+        url: '/',
+        templateUrl: 'templates/index.html'
+      })
+      .state({
+        name: 'signin',
+        url: '/signin',
+        templateUrl: 'templates/signin.html',
+        controller: 'SigninController',
+        controllerAs: 'vm'
+      });
   }
 
 })();

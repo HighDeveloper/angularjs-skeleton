@@ -1,0 +1,16 @@
+<form ng-submit="vm.actions.signin(email, password)" style="text-align: center">
+
+  <h4>{{'message.Sign in' | translate}}</h4>
+  <input type="text" ng-model="email" placeholder="{{'message.Email' | translate}}"/>
+  <br/>
+  <input type="password" ng-model="password" placeholder="{{'message.Password' | translate}}"/>
+  ​<br/>
+  <br/>
+  <button type="submit">{{'message.Sign in' | translate}}</button>
+
+  <br/>
+  <br/>
+
+  <a ui-sref="index">{{'message.Back' | translate}}</a>
+</form>
+
