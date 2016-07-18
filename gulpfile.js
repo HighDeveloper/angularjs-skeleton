@@ -1,12 +1,30 @@
 //Getting all dependencies to run all tasks
+
+//Runners and compilers
 var gulp = require('gulp');
 var concat = require('gulp-concat');
-var connect = require('gulp-connect');
 var templateCache = require('gulp-angular-templatecache');
 var inject = require('gulp-inject');
-var history = require('connect-history-api-fallback');
+var sass = require('gulp-sass');
+var less = require('gulp-less');
+var merge = require('merge-stream');
+
+//Build and server config
+var browserSync = require('browser-sync').create();
+var historyMiddleware = require('connect-history-api-fallback')({});
 var config = require('./config-build')();
-var historyMiddleware = history({});
+
+//Config variables to may build all
+var appScript = config.distributionAssetsFolder + '/' + config.appScriptsFile;
+var appStyle = config.distributionAssetsFolder + '/' + config.appStylesFile;
+var appTemplateScript = config.distributionAssetsFolder + '/' + config.appTemplatesFile;
+var appLanguageScript = config.distributionAssetsFolder + '/' + config.appLanguagesFile;
+var vendorScript = config.distributionAssetsFolder + '/' + config.vendorScriptsFile;
+var vendorStyle = config.distributionAssetsFolder + '/' + config.vendorStylesFile;
+
+//Variables to handle unit and end to end testing
+var Server = require('karma').Server;
+var protractor = require("gulp-protractor").protractor;
 
 
 //ALL TASK TO COMPILE, CONCAT AND COPY APP FILES TO DIST
@@ -26,7 +44,11 @@ gulp.task('app-scripts', function () {
 //Concat and copy App CSS files to distribution folder
 gulp.task('app-styles', function () {
 
-  return gulp.src(config.assets.app.styles).pipe(concat(config.appStylesFile)).pipe(gulp.dest(config.distributionAssetsFolder));
+  var sassStream = gulp.src(config.assets.app.sassStyles).pipe(sass());
+  var lessStream = gulp.src(config.assets.app.lessStyles).pipe(less());
+  var cssStream = gulp.src(config.assets.app.styles);
+
+  return merge(sassStream, lessStream, cssStream).pipe(concat(config.appStylesFile)).pipe(gulp.dest(config.distributionAssetsFolder));
 });
 
 //Compile, concat and copy App Template files to distribution folder
@@ -36,6 +58,12 @@ gulp.task('app-templates', function () {
     root: config.templatesFolder,
     module: config.mainModule
   })).pipe(gulp.dest(config.distributionAssetsFolder));
+});
+
+//Compile, concat and copy App Languages files to distribution folder
+gulp.task('app-languages', function () {
+
+  return gulp.src(config.assets.app.languages).pipe(concat(config.appLanguagesFile)).pipe(gulp.dest(config.distributionAssetsFolder));
 });
 
 
@@ -57,40 +85,56 @@ gulp.task('vendor-styles', function () {
 //MAIN TASKS TO RUN ALWAYS WITH ANOTHER TASKS AS DEPENDENCIES
 
 //Task to build, copy and inject all files inside a dist folder
-gulp.task('build-inject', ['direct-files', 'app-scripts', 'app-styles', 'app-templates', 'vendor-scripts', 'vendor-styles'], function () {
+gulp.task('build', ['direct-files', 'app-scripts', 'app-styles', 'app-templates', 'app-languages', 'vendor-scripts', 'vendor-styles'], function () {
 
-  var appScript = config.distributionAssetsFolder + '/' + config.appScriptsFile;
-  var appStyle = config.distributionAssetsFolder + '/' + config.appStylesFile;
-  var appTemplateScript = config.distributionAssetsFolder + '/' + config.appTemplatesFile;
-  var vendorScript = config.distributionAssetsFolder + '/' + config.vendorScriptsFile;
-  var vendorStyle = config.distributionAssetsFolder + '/' + config.vendorStylesFile;
-
-  return gulp.src('dist/index.html').pipe(inject(gulp.src([vendorScript, appScript, appTemplateScript, vendorStyle, appStyle], {read: false}), {relative: true})).pipe(gulp.dest('dist'));
+  return gulp.src('dist/index.html').pipe(inject(gulp.src([vendorScript, appScript, appTemplateScript, appLanguageScript, vendorStyle, appStyle], {read: false}), {relative: true})).pipe(gulp.dest('dist'));
 });
 
 //Task to run a Dev Server
-gulp.task('server', function () {
-  connect.server({
-    port: 8000,
-    root: 'dist',
-    livereload: true,
-    middleware: function(connect, opt) {
-      return [historyMiddleware];
-    }
+gulp.task('serve', function () {
+
+  browserSync.init({
+    server: {
+      baseDir: 'dist'
+    },
+    middleware: [historyMiddleware]
   });
-});
 
-//Task to apply live reload inside a Dev Server
-gulp.task('reload', function () {
-  gulp.src('dist/**/*').pipe(connect.reload());
-});
-
-//Task to detect dev changes and then rebuild all dependencies calling the main task 'build-inject'
-gulp.task('rebuild', function () {
-  gulp.watch(['config-build.js', 'app/**/*'], ['build-inject', 'reload']);
+  //Watch for apply live reload inside a Dev Server
+  gulp.watch("dist/**/*").on('change', browserSync.reload);
+  //Watch for to detect dev changes and then rebuild all dependencies calling the tasks properly
+  gulp.watch(config.directFiles, ['direct-files'], function () {
+    gulp.src('dist/index.html').pipe(inject(gulp.src([vendorScript, appScript, appTemplateScript, appLanguageScript, vendorStyle, appStyle], {read: false}), {relative: true})).pipe(gulp.dest('dist'));
+  });
+  gulp.watch(config.assets.app.scripts, ['app-scripts']);
+  gulp.watch([config.assets.app.sassStyles, config.assets.app.lessStyles, config.assets.app.styles], ['app-styles']);
+  gulp.watch(config.assets.app.templates, ['app-templates']);
+  gulp.watch(config.assets.app.languages, ['app-languages']);
 });
 
 //Gulp default task
-gulp.task('default', ['build-inject', 'server', 'rebuild']);
+gulp.task('default', ['build', 'serve']);
 
 
+//ALL TASK TO EXECUTE UNIT / End2End Tests
+
+//Unit testing using karma
+gulp.task('unit-tests', function (done) {
+
+  new Server({
+    configFile: 'karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
+
+//E2E testing using protractor
+gulp.task('e2e-tests', function () {
+
+  gulp.src(['tests/e2e/**/*.js']).pipe(protractor({
+      configFile: "protractor.conf.js",
+      args: ['--baseUrl', 'http://127.0.0.1:8000']
+    })
+  ).on('error', function (e) {
+      throw e
+    });
+});

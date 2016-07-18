@@ -5,6 +5,7 @@ module.exports = function () {
   var appScriptsFile = 'app.js';
   var appStylesFile = 'app.css';
   var appTemplatesFile = 'templates.js';
+  var appLanguagesFile = 'languages.js';
   var vendorScriptsFile = 'vendor.js';
   var vendorStylesFile = 'vendor.css';
   var distributionAppFolder = 'dist';
@@ -18,9 +19,12 @@ module.exports = function () {
     var directFiles = ['public/**/*', 'app/index.html'];
 
     var appAssets = {
-      scripts: ['app/app.js', 'app/modules/**/*.js', 'app/**/*.js'],
+      scripts: ['app/app.js', 'app/modules/**/*.js', 'app/**/*.js', '!app/locales/**/*.js'],
       styles: 'app/styles/**/*.css',
-      templates: 'app/templates/**/*.html'
+      sassStyles: 'app/styles/**/*.scss',
+      lessStyles: 'app/styles/**/*.less',
+      templates: 'app/templates/**/*.html',
+      languages: 'app/locales/**/*.js'
     };
 
     var vendorAssets = {
@@ -57,6 +61,10 @@ module.exports = function () {
   app.importScript('bower_components/angular-ui-router/release/angular-ui-router.min.js');
   app.importScript('bower_components/angular-restmod/dist/angular-restmod-bundle.min.js');
   app.importScript('bower_components/satellizer/satellizer.min.js');
+  app.importScript('bower_components/angular-translate/angular-translate.min.js');
+  app.importScript('bower_components/angular-cookies/angular-cookies.min.js');
+  app.importScript('bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js');
+  app.importScript('bower_components/angular-translate-storage-local/angular-translate-storage-local.min.js');
 
   //Returning module object
   return {
@@ -65,6 +73,7 @@ module.exports = function () {
     appScriptsFile: appScriptsFile,
     appStylesFile: appStylesFile,
     appTemplatesFile: appTemplatesFile,
+    appLanguagesFile: appLanguagesFile,
     vendorScriptsFile: vendorScriptsFile,
     vendorStylesFile: vendorStylesFile,
     distributionAppFolder: distributionAppFolder,
